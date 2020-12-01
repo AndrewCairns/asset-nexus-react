@@ -1,0 +1,23 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 25px;
+  box-shadow: 3px 10px 10px -2px rgba(0, 0, 0, 0.25);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+
+  .card__head {
+    background-color: $brand-color-primary;
+    min-height: 5rem;
+  }
+
+  .card__body {
+    padding: 1rem 1rem 0rem;
+  }
+
+  .card__foot {
+    padding: 1rem;
+  }
+}

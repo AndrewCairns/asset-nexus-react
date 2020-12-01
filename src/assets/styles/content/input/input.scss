@@ -1,0 +1,20 @@
+.input-element {
+  label {
+    display: block;
+    color: $base-grey-4;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  input {
+    display: block;
+    border-radius: 15px;
+    border: 2px solid $base-black;
+    padding: 1.2rem;
+    font-size: 1.2rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

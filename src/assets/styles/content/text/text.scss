@@ -1,0 +1,65 @@
+h1 {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 2rem;
+  color: $primary-text-color;
+}
+
+h2 {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  color: $primary-text-color;
+}
+
+h3 {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 1.17rem;
+  color: $primary-text-color;
+}
+
+h4 {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: $primary-text-color;
+}
+
+h5 {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 0.83rem;
+  color: $primary-text-color;
+}
+
+h6 {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 0.67rem;
+  color: $primary-text-color;
+}
+
+p {
+  margin: 0;
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: $primary-text-color;
+  line-height: 1.5rem;
+}
+
+span {
+  font-size: 1rem;
+  font-style: italic;
+  color: $primary-text-color;
+}
+
+a {
+  color: $primary-text-color;
+  text-decoration: none;
+  border-bottom: 3px solid $secondary-text-color;
+}
+
+a:hover {
+  border-bottom: 5px solid $secondary-text-color;
+}

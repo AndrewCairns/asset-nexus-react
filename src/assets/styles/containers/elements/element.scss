@@ -1,0 +1,13 @@
+.element {
+  display: flex;
+  padding: 1rem 1rem;
+
+  &:before {
+    content: "#";
+    padding-right: 2rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: $brand-color-secondary;
+    font-family: "Handlee", cursive;
+  }
+}
