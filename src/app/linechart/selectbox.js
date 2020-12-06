@@ -1,4 +1,3 @@
-import { filter } from "d3";
 import React from "react";
 
 function SelectBox({ ChartData, passChildData }) {
@@ -31,12 +30,6 @@ function SelectBox({ ChartData, passChildData }) {
             </optgroup>
           );
         })}
-
-        {/* <ng-container *ngFor="let item of this.items | keyvalue">
-        <optgroup *ngFor="let item2 of item.value" label="{{item.key}}">
-            <option *ngFor="let item3 of item2 | keyvalue" value='{{item.key}}/{{item3.key}}'> {{item3.key}}</option>
-        </optgroup>
-        </ng-container> */}
       </select>
     </>
   );

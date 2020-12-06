@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Col, Grid, Row } from "react-flexbox-grid";
 import LineChart from "./linechart/linechart";
 import SelectBox from "./linechart/selectbox";
+import SelectButton from "./linechart/selectbutton";
 
 const ChartData = {
   Assets: [
@@ -47,7 +49,7 @@ const ChartData = {
           ],
         },
       ],
-      "Pension(s)": [
+      Pensions: [
         {
           key: "Zurich",
           values: [
@@ -139,8 +141,28 @@ function Home() {
 
   return (
     <>
-      <SelectBox ChartData={ChartData} passChildData={setChildData} />
-      <LineChart ChartData={ChartData} dataSelection={dataSelection} />
+      <Grid fluid>
+        <Row>
+          <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
+            <Row start="lg" center="xs">
+              <SelectBox ChartData={ChartData} passChildData={setChildData} />
+            </Row>
+          </Col>
+          <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
+            <Row center="xs" end="lg">
+              <SelectButton
+                ChartData={ChartData}
+                dataSelection={dataSelection}
+              />
+            </Row>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} sm={12} md={12} lg={12}>
+            <LineChart ChartData={ChartData} dataSelection={dataSelection} />
+          </Col>
+        </Row>
+      </Grid>
     </>
   );
 }

@@ -2,11 +2,11 @@ import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
 function LineChart({ ChartData, dataSelection }) {
-  console.log(dataSelection);
-
   const d3Container = useRef(null);
 
   useEffect(() => {
+    d3.select("#linechart").selectAll("*").remove();
+
     //Chart Config
     const margin = { top: 0, right: 100, bottom: 0, left: 0 };
     const width = 1124 - margin.left - margin.right;
