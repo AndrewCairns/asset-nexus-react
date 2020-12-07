@@ -17,15 +17,13 @@ function SelectBox({ ChartData, passChildData }) {
           return (
             <optgroup key={i} label={item}>
               {items[item].map((item2) => {
-                {
-                  return Object.keys(item2).map((item3, j) => {
-                    return (
-                      <option key={j} value={item + "/" + item3}>
-                        {item3}
-                      </option>
-                    );
-                  });
-                }
+                return Object.keys(item2).map((item3, j) => {
+                  return (
+                    <option key={j} value={item + "/" + item3}>
+                      {item3}
+                    </option>
+                  );
+                });
               })}
             </optgroup>
           );

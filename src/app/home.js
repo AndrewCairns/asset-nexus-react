@@ -138,6 +138,7 @@ const ChartData = {
 
 function Home() {
   const [dataSelection, setChildData] = useState("");
+  const [TextTest, setTextTest] = useState("");
 
   return (
     <>
@@ -153,13 +154,18 @@ function Home() {
               <SelectButton
                 ChartData={ChartData}
                 dataSelection={dataSelection}
+                passTextUp={setTextTest}
               />
             </Row>
           </Col>
         </Row>
         <Row>
           <Col xs={12} sm={12} md={12} lg={12}>
-            <LineChart ChartData={ChartData} dataSelection={dataSelection} />
+            <LineChart
+              ChartData={ChartData}
+              dataSelection={dataSelection}
+              dataHidden={TextTest}
+            />
           </Col>
         </Row>
       </Grid>

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 let dataGroup = "Assets";
 let dataBranch = "Property";
 
-function SelectButton({ ChartData, dataSelection }) {
+function SelectButton({ ChartData, dataSelection, passTextUp }) {
   let buttonItems = [];
 
   const [selectedItemState, setSelected] = useState({});
@@ -25,13 +25,28 @@ function SelectButton({ ChartData, dataSelection }) {
     var selected = selectedItemState;
     selected[el.target.name] = !selected[el.target.name];
 
-    console.log(selected[el.target.name]);
-
     setSelected((prevState) => ({
       ...prevState,
       [el.target.name]: selected[el.target.name],
     }));
-    console.log(selectedItemState);
+
+    ChartData[dataGroup][0][dataBranch].map((displayGroupItems) => {
+      if (
+        displayGroupItems.key === el.target.name &&
+        selected[el.target.name] === true
+      ) {
+        return (displayGroupItems.hidden = true);
+      } else if (
+        displayGroupItems.hidden === true &&
+        displayGroupItems.key !== el.target.name
+      ) {
+        return (displayGroupItems.hidden = true);
+      } else {
+        return (displayGroupItems.hidden = false);
+      }
+    });
+
+    passTextUp(selectedItemState);
   }
 
   function RenderItem(el, i) {

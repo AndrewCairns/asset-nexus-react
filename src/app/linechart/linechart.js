@@ -54,7 +54,8 @@ function LineChart({ ChartData, dataSelection }) {
         Ydomain.push(displayGroupItemValues.value);
         Xdomain.push(parse(displayGroupItemValues.date));
         displayGroupItemValues.color = colors(i);
-        displayGroupItemValues.opacity = displayGroupItems.opacity;
+        displayGroupItemValues.hidden = displayGroupItems.hidden;
+        displayGroupItemValues.name = displayGroupItems.key;
         return representedValues.push(displayGroupItemValues);
       });
     });
@@ -232,6 +233,9 @@ function LineChart({ ChartData, dataSelection }) {
           .attr("d", (d) => {
             lineWithDefinedTrue(d.values);
           })
+          .attr("opacity", (d) => {
+            return d.hidden === true ? 0.1 : 1;
+          })
           .style("clip-path", "url(#clip)") //<-- apply clipping
           .attr("filter", "url(#dropshadow)")
           .attr("stroke", (d, i) => colors(i))
@@ -246,67 +250,67 @@ function LineChart({ ChartData, dataSelection }) {
       (exit) => exit.call((exit) => exit.transition(t)).remove()
     );
 
-    var valueAreas = d3.select("#linechart g.lines").selectAll(".AreaElements");
-    valueAreas.data(ChartData[dataGroup][0][dataBranch]).join(
-      (enter) =>
-        enter
-          .append("path")
-          .attr("class", "AreaElements")
-          .attr("fill", (d, i) => colors(i))
-          .attr("d", (d) => areaWithDefinedTrue(d.values))
-          .attr("opacity", (d) => {
-            return d.opacity === 1 ? 0.2 : 0;
-          })
-          .style("clip-path", "url(#clip)") //<-- apply clipping
-          .attr("stroke", (d, i) => colors(i))
-          .call((enter) => enter.transition(t)),
-      (update) =>
-        update
-          .attr("stroke", (d, i) => colors(i))
-          .attr("opacity", (d) => {
-            return d.opacity === 1 ? 0.2 : 0;
-          })
-          .attr("d", (d) => areaWithDefinedTrue(d.values))
-          .call((update) => update.transition(t)),
-      (exit) => exit.call((exit) => exit.transition(t)).remove()
-    );
+    // var valueAreas = d3.select("#linechart g.lines").selectAll(".AreaElements");
+    // valueAreas.data(ChartData[dataGroup][0][dataBranch]).join(
+    //   (enter) =>
+    //     enter
+    //       .append("path")
+    //       .attr("class", "AreaElements")
+    //       .attr("fill", (d, i) => colors(i))
+    //       .attr("d", (d) => areaWithDefinedTrue(d.values))
+    //       .attr("opacity", (d) => {
+    //         return d.opacity === 1 ? 0.2 : 0;
+    //       })
+    //       .style("clip-path", "url(#clip)") //<-- apply clipping
+    //       .attr("stroke", (d, i) => colors(i))
+    //       .call((enter) => enter.transition(t)),
+    //   (update) =>
+    //     update
+    //       .attr("stroke", (d, i) => colors(i))
+    //       .attr("opacity", (d) => {
+    //         return d.opacity === 1 ? 0.2 : 0;
+    //       })
+    //       .attr("d", (d) => areaWithDefinedTrue(d.values))
+    //       .call((update) => update.transition(t)),
+    //   (exit) => exit.call((exit) => exit.transition(t)).remove()
+    // );
 
     var valuePointLines = d3
       .select("#linechart g.lines")
       .selectAll(".valuePointLines");
 
-    valuePointLines.data(representedValues).join(
-      (enter) =>
-        enter
-          .append("line")
-          .attr("class", "valuePointLines")
-          .style("clip-path", "url(#clip)") //<-- apply clipping
-          .attr("fill", "none")
-          .attr("opacity", (d) => {
-            return d.verified === false ? 1 : 0;
-          })
-          .attr("filter", "url(#dropshadow)")
-          .attr("stroke", (d, i) => d.color)
-          .style("stroke-width", 1.5)
-          .attr("x1", (d) => {
-            return xScale(parse(d.date));
-          })
-          .attr("y1", 0)
-          .attr("x2", (d) => {
-            return xScale(parse(d.date));
-          })
-          .attr("y2", (d) => {
-            return yScale(d.value);
-          })
-          .call((enter) => enter.transition(t)),
-      (update) =>
-        update
-          .attr("opacity", (d) => {
-            return d.verified === true && d.opacity === 1 ? 1 : 0;
-          })
-          .call((update) => update.transition(t)),
-      (exit) => exit.call((exit) => exit.transition(t)).remove()
-    );
+    // valuePointLines.data(representedValues).join(
+    //   (enter) =>
+    //     enter
+    //       .append("line")
+    //       .attr("class", "valuePointLines")
+    //       .style("clip-path", "url(#clip)") //<-- apply clipping
+    //       .attr("fill", "none")
+    //       .attr("opacity", (d) => {
+    //         return d.verified === false ? 1 : 0;
+    //       })
+    //       .attr("filter", "url(#dropshadow)")
+    //       .attr("stroke", (d, i) => d.color)
+    //       .style("stroke-width", 1.5)
+    //       .attr("x1", (d) => {
+    //         return xScale(parse(d.date));
+    //       })
+    //       .attr("y1", 0)
+    //       .attr("x2", (d) => {
+    //         return xScale(parse(d.date));
+    //       })
+    //       .attr("y2", (d) => {
+    //         return yScale(d.value);
+    //       })
+    //       .call((enter) => enter.transition(t)),
+    //   (update) =>
+    //     update
+    //       .attr("opacity", (d) => {
+    //         return d.verified === true && d.opacity === 1 ? 1 : 0;
+    //       })
+    //       .call((update) => update.transition(t)),
+    //   (exit) => exit.call((exit) => exit.transition(t)).remove()
+    // );
 
     var div = d3
       .select("body")
@@ -325,7 +329,9 @@ function LineChart({ ChartData, dataSelection }) {
           .style("fill", (d, i) => {
             return d.verified === true ? d.color : "#fff8ee";
           })
-          .attr("opacity", "1")
+          .style("opacity", (d) => {
+            return d.hidden === true ? 0.1 : 1;
+          })
           .style("stroke", (d, i) => d.color) // set the line colour
           .style("stroke-width", (d, i) => {
             return d.verified === true ? 3.5 : 4.5;
@@ -343,7 +349,9 @@ function LineChart({ ChartData, dataSelection }) {
             div.transition().duration(50).style("opacity", 1);
 
             let tipValue =
-              "<strong>Value</strong>: " +
+              "<strong>Name</strong>: " +
+              d.name +
+              "<br /><strong>Value</strong>: " +
               d.value +
               "<br/> Date: " +
               d.date +
@@ -362,7 +370,6 @@ function LineChart({ ChartData, dataSelection }) {
           .call((enter) => enter.transition(t)),
       (update) =>
         update
-          .attr("opacity", "1")
           .attr("cx", (d) => {
             return xScale(parse(d.date));
           })
