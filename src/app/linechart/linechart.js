@@ -279,38 +279,33 @@ function LineChart({ ChartData, dataSelection }) {
       .select("#linechart g.lines")
       .selectAll(".valuePointLines");
 
-    // valuePointLines.data(representedValues).join(
-    //   (enter) =>
-    //     enter
-    //       .append("line")
-    //       .attr("class", "valuePointLines")
-    //       .style("clip-path", "url(#clip)") //<-- apply clipping
-    //       .attr("fill", "none")
-    //       .attr("opacity", (d) => {
-    //         return d.verified === false ? 1 : 0;
-    //       })
-    //       .attr("filter", "url(#dropshadow)")
-    //       .attr("stroke", (d, i) => d.color)
-    //       .style("stroke-width", 1.5)
-    //       .attr("x1", (d) => {
-    //         return xScale(parse(d.date));
-    //       })
-    //       .attr("y1", 0)
-    //       .attr("x2", (d) => {
-    //         return xScale(parse(d.date));
-    //       })
-    //       .attr("y2", (d) => {
-    //         return yScale(d.value);
-    //       })
-    //       .call((enter) => enter.transition(t)),
-    //   (update) =>
-    //     update
-    //       .attr("opacity", (d) => {
-    //         return d.verified === true && d.opacity === 1 ? 1 : 0;
-    //       })
-    //       .call((update) => update.transition(t)),
-    //   (exit) => exit.call((exit) => exit.transition(t)).remove()
-    // );
+    valuePointLines.data(representedValues).join(
+      (enter) =>
+        enter
+          .append("line")
+          .attr("class", "valuePointLines")
+          .style("clip-path", "url(#clip)") //<-- apply clipping
+          .attr("fill", "none")
+          .style("opacity", (d) => {
+            return d.hidden === true ? 0.1 : 1;
+          })
+          .attr("filter", "url(#dropshadow)")
+          .attr("stroke", (d, i) => d.color)
+          .style("stroke-width", 1.5)
+          .attr("x1", (d) => {
+            return xScale(parse(d.date));
+          })
+          .attr("y1", 0)
+          .attr("x2", (d) => {
+            return xScale(parse(d.date));
+          })
+          .attr("y2", (d) => {
+            return yScale(d.value);
+          })
+          .call((enter) => enter.transition(t)),
+      (update) => update.call((update) => update.transition(t)),
+      (exit) => exit.call((exit) => exit.transition(t)).remove()
+    );
 
     var div = d3
       .select("body")
