@@ -237,7 +237,6 @@ function LineChart({ ChartData, dataSelection }) {
             return d.hidden === true ? 0.1 : 1;
           })
           .style("clip-path", "url(#clip)") //<-- apply clipping
-          .attr("filter", "url(#dropshadow)")
           .attr("stroke", (d, i) => colors(i))
           .attr("stroke-width", "2px")
           .style("stroke-dasharray", "5,5")
@@ -289,7 +288,6 @@ function LineChart({ ChartData, dataSelection }) {
           .style("opacity", (d) => {
             return d.hidden === true ? 0.1 : 1;
           })
-          .attr("filter", "url(#dropshadow)")
           .attr("stroke", (d, i) => d.color)
           .style("stroke-width", 1.5)
           .attr("x1", (d) => {
