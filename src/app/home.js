@@ -4,6 +4,14 @@ import LineChart from "./linechart/linechart";
 import SelectBox from "./linechart/selectbox";
 import SelectButton from "./linechart/selectbutton";
 
+const colorRange = [
+  "#264653ff",
+  "#2a9d8fff",
+  "#e9c46aff",
+  "#f4a261ff",
+  "#e76f51ff",
+];
+
 const ChartData = {
   Assets: [
     {
@@ -170,6 +178,7 @@ function Home() {
                 ChartData={ChartData}
                 dataSelection={dataSelection}
                 passTextUp={setTextTest}
+                colorRange={colorRange}
               />
             </Row>
           </Col>

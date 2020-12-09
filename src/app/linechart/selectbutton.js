@@ -3,7 +3,7 @@ import React, { useState } from "react";
 let dataGroup = "Assets";
 let dataBranch = "Property";
 
-function SelectButton({ ChartData, dataSelection, passTextUp }) {
+function SelectButton({ ChartData, dataSelection, passTextUp, colorRange }) {
   let buttonItems = [];
 
   const [selectedItemState, setSelected] = useState({});
@@ -58,7 +58,9 @@ function SelectButton({ ChartData, dataSelection, passTextUp }) {
         key={i}
         className={`selectButton ${className}`}
         onClick={(el) => selectItem(el)}
+        style={{ borderLeft: "4px solid " + colorRange[i] }}
       >
+        {console.log(colorRange[i])}
         <span>{el.key}</span>
         <span className="currentValue">
           £{el.values[el.values.length - 1].value}k
