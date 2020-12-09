@@ -8,10 +8,10 @@ function LineChart({ ChartData, dataSelection }) {
     d3.select("#linechart").selectAll("*").remove();
 
     //Chart Config
-    const margin = { top: 0, right: 100, bottom: 0, left: 0 };
+    const margin = { top: 0, right: 100, bottom: 0, left: 21 };
     const width = 1124 - margin.left - margin.right;
     const height = 300 - margin.top - margin.bottom;
-    const parse = d3.timeParse("%m/%d/%Y");
+    const parse = d3.timeParse("%d/%m/%Y");
     // colorsArray = ["#7400b8", "#5e60ce", "#48bfe3", "#64dfdf", "#80ffdb"]
     // colorsArray = ["red", "green", "blue"]
     const colorsArray = ["#2E5BFF", "#8C54FF"];
@@ -76,8 +76,8 @@ function LineChart({ ChartData, dataSelection }) {
 
     const yScale = d3
       .scaleLinear()
-      .range([height - 20, 20])
-      .domain(d3.extent(Ydomain))
+      .range([height, 20])
+      .domain([0, d3.max(Ydomain)])
       .nice();
 
     const xAxis = svg
@@ -200,7 +200,7 @@ function LineChart({ ChartData, dataSelection }) {
         d3
           .axisLeft(yScale)
           .ticks(4)
-          .tickSize(-width + 40)
+          .tickSize(-width + 50)
           .tickFormat("")
       );
 
@@ -286,7 +286,7 @@ function LineChart({ ChartData, dataSelection }) {
           .style("clip-path", "url(#clip)") //<-- apply clipping
           .attr("fill", "none")
           .style("opacity", (d) => {
-            return d.hidden === true ? 0.1 : 1;
+            return d.verified === false || d.hidden === true ? 0 : 1;
           })
           .attr("stroke", (d, i) => d.color)
           .style("stroke-width", 1.5)
@@ -463,10 +463,10 @@ function LineChart({ ChartData, dataSelection }) {
         .attr("opacity", "1")
         .style("stroke", (d, i) => d.color) // set the line colour
         .style("stroke-width", (d, i) => {
-          return d.verified === false ? 3.5 : 4.5;
+          return d.verified === false ? 8.5 : 5.5;
         })
         .style("r", (d, i) => {
-          return d.verified === false ? 4 : 6;
+          return d.verified === false ? 4 : 10;
         });
 
       d3.select("#linechart g.lines")

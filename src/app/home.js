@@ -17,6 +17,11 @@ const ChartData = {
               verified: false,
             },
             {
+              value: 170000,
+              date: "14/11/2020",
+              verified: true,
+            },
+            {
               value: 180000,
               date: "16/11/2020",
               verified: false,
@@ -32,8 +37,18 @@ const ChartData = {
           key: "Survey Valuation",
           values: [
             {
-              value: 138000,
-              date: "16/10/2020",
+              value: 78000,
+              date: "06/10/2020",
+              verified: true,
+            },
+            {
+              value: 250000,
+              date: "21/11/2020",
+              verified: true,
+            },
+            {
+              value: 60000,
+              date: "30/12/2020",
               verified: true,
             },
           ],
