@@ -189,6 +189,7 @@ function Home() {
               ChartData={ChartData}
               dataSelection={dataSelection}
               dataHidden={TextTest}
+              colorRange={colorRange}
             />
           </Col>
         </Row>

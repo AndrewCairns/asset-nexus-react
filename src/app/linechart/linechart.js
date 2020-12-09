@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-function LineChart({ ChartData, dataSelection }) {
+function LineChart({ ChartData, dataSelection, colorRange }) {
   const d3Container = useRef(null);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ function LineChart({ ChartData, dataSelection }) {
     const parse = d3.timeParse("%d/%m/%Y");
     // colorsArray = ["#7400b8", "#5e60ce", "#48bfe3", "#64dfdf", "#80ffdb"]
     // colorsArray = ["red", "green", "blue"]
-    const colorsArray = ["#2E5BFF", "#8C54FF"];
+    const colorsArray = colorRange;
     // colorsOrg = d3.scaleOrdinal(d3.schemeCategory10);
     // colorsFull = d3.scaleOrdinal(["#7400b8","#6930c3","#5e60ce","#5390d9","#4ea8de","#48bfe3","#56cfe1","#64dfdf","#72efdd","#80ffdb"]);
     const colors = d3.scaleOrdinal(colorsArray);
