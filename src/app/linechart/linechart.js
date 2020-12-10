@@ -8,7 +8,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     d3.select("#linechart").selectAll("*").remove();
 
     //Chart Config
-    const margin = { top: 0, right: 100, bottom: 0, left: 21 };
+    const margin = { top: 30, right: 100, bottom: 30, left: 21 };
     const width = 1124 - margin.left - margin.right;
     const height = 300 - margin.top - margin.bottom;
     const parse = d3.timeParse("%d/%m/%Y");
@@ -67,7 +67,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .attr("viewBox", "0 0 " + 1024 + " " + 768)
       .append("g")
       .attr("class", "lines")
-      .attr("transform", "translate(" + 30 + ", " + margin.top + ")");
+      .attr("transform", "translate(" + 35 + ", " + margin.top + ")");
 
     const xScale = d3
       .scaleTime()
@@ -105,6 +105,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .attr("text-anchor", "end")
       .attr("x", width - 30)
       .attr("y", height2 + margin2.top + 45)
+      .style("fill", "#8097B1")
       .text("Full Date Range (year)");
 
     svg
@@ -113,15 +114,17 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .attr("text-anchor", "end")
       .attr("x", width - 30)
       .attr("y", height + 45)
+      .style("fill", "#8097B1")
       .text("Date (day/month/year)");
 
     svg
       .append("text")
       .attr("class", "y label")
       .attr("text-anchor", "end")
-      .attr("x", -20)
-      .attr("y", -25)
+      .attr("x", -15)
+      .attr("y", -35)
       .attr("dy", ".75em")
+      .style("fill", "#8097B1")
       .attr("transform", "rotate(-90)")
       .text("Value (£/k)");
 
@@ -135,35 +138,34 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     const chartLegend = d3.select("#linechart g.lines").append("g");
 
     chartLegend
-      .append("line")
-      .attr("x1", width - 290)
-      .attr("y1", 28)
-      .attr("x2", width - 250)
-      .attr("y2", 28)
-      .attr("stroke", "#8097B1")
-      .attr("stroke-width", "2px")
-      .style("fill", "none");
+      .append("circle")
+      .style("fill", "#8097B1")
+      .style("stroke", "#8097B1")
+      .style("stroke-width", 4)
+      .style("r", 6)
+      .attr("cx", width - 140)
+      .attr("cy", 0);
+
     chartLegend
       .append("text")
       .attr("x", width - 245)
-      .attr("y", 32)
+      .attr("y", 5)
       .text("Validated")
       .style("fill", "#8097B1");
 
     chartLegend
-      .append("line")
-      .attr("x1", width - 160)
-      .attr("y1", 28)
-      .attr("x2", width - 120)
-      .attr("y2", 28)
-      .attr("stroke", "#8097B1")
-      .attr("stroke-width", "2px")
-      .style("stroke-dasharray", "8,8")
-      .style("fill", "none");
+      .append("circle")
+      .style("fill", "#fff")
+      .style("stroke", "#8097B1")
+      .style("stroke-width", 4)
+      .style("r", 6)
+      .attr("cx", width - 260)
+      .attr("cy", 0);
+
     chartLegend
       .append("text")
       .attr("x", width - 115)
-      .attr("y", 32)
+      .attr("y", 5)
       .text("Unvalidated")
       .style("fill", "#8097B1");
 
@@ -289,7 +291,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
             return d.verified === false || d.hidden === true ? 0 : 1;
           })
           .attr("stroke", (d, i) => d.color)
-          .style("stroke-width", 1.5)
+          .style("stroke-width", 2.5)
           .attr("x1", (d) => {
             return xScale(parse(d.date));
           })
@@ -348,7 +350,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
               d.value +
               "<br/> Date: " +
               d.date +
-              "<br /> Verified: <em>" +
+              "<br /> Validated: <em>" +
               d.verified +
               "</em>";
 
@@ -428,9 +430,9 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .append("clipPath")
       .attr("id", "clipForPoints")
       .append("rect")
-      .attr("width", width - 40)
+      .attr("width", width + 10)
       .attr("height", height)
-      .attr("transform", "translate(22,0)");
+      .attr("transform", "translate(15,0)");
 
     d3.select("#linechart .brush").remove(); // clears brush scrolling element
 
