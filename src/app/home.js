@@ -4,13 +4,7 @@ import LineChart from "./linechart/linechart";
 import SelectBox from "./linechart/selectbox";
 import SelectButton from "./linechart/selectbutton";
 
-const colorRange = [
-  "#264653ff",
-  "#2a9d8fff",
-  "#e9c46aff",
-  "#f4a261ff",
-  "#e76f51ff",
-];
+const colorRange = ["#2075D3", "#52BC46", "#931E66", "#f4a261ff", "#e76f51ff"];
 
 const ChartData = {
   Assets: [

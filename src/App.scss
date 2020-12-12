@@ -46,15 +46,22 @@ div.tooltip-donut {
   stroke-width: 0;
 }
 
-.axis line,
+.axis .tick > line {
+  stroke: #8097b1;
+  opacity: 0.1;
+}
+
 .axis path {
   stroke: #8097b1;
-  opacity: 0.4;
+  stroke-dasharray: 1373;
+  opacity: 1;
 }
 
 .axis text {
-  fill: #8097b1;
-  opacity: 0.4;
+  fill: #c8d3e0;
+  opacity: 1;
+  shape-rendering: crispEdges;
+  stroke-width: 0;
 }
 
 select {
