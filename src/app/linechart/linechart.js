@@ -8,7 +8,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     d3.select("#linechart").selectAll("*").remove();
 
     //Chart Config
-    const margin = { top: 30, right: 100, bottom: 30, left: 21 };
+    const margin = { top: 30, right: 100, bottom: 30, left: 51 };
     const width = 1124 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
     const parse = d3.timeParse("%d/%m/%Y");
@@ -23,6 +23,15 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     const Xdomain = [];
     const representedValues = [];
     const t = d3.transition().duration(750).ease(d3.easeLinear);
+
+    var formatter = new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: "GBP",
+
+      // These options are needed to round to whole numbers if that's what you want.
+      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    });
 
     // Data
     let dataGroup = "Assets";
@@ -76,7 +85,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
 
     const xScale = d3
       .scaleTime()
-      .range([30, width - margin.left])
+      .range([margin.left, width])
       .domain(d3.extent(Xdomain));
 
     const yScale = d3
@@ -88,14 +97,14 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     const xAxis = svg
       .append("g")
       .attr("class", "xaxis axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + (10 + height) + ")")
       .style("stroke-dasharray", "5,5")
       .style("stroke", "#8097B1");
 
     const yAxis = svg
       .append("g")
       .attr("class", "yaxis axis")
-      .attr("transform", "translate(30,0)")
+      .attr("transform", "translate(" + margin.left + ",0)")
       .style("stroke-dasharray", "5,5")
       .style("stroke", "#8097B1");
 
@@ -181,48 +190,20 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
 
     d3.select("#linechart g.lines").selectAll(".grid").remove(); // clears grid when updating data ??
 
-    // const gridHorizontal = d3
-    //   .select("#linechart g.lines")
-    //   .append("g")
-    //   .attr("class", "grid")
-    //   .attr("transform", "translate(0," + height + ")")
-    //   .style("stroke-dasharray", "5,5")
-    //   .call(
-    //     d3
-    //       .axisBottom(xScale)
-    //       .ticks(10)
-    //       .tickSize(-height + 20)
-    //       .tickFormat("")
-    //   );
-    // gridHorizontal
-    //   .selectAll("line")
-    //   .attr("stroke", "#8097B1")
-    //   .attr("opacity", 0.3);
-
-    // const gridVertical = d3
-    //   .select("#linechart g.lines")
-    //   .append("g")
-    //   .attr("class", "grid")
-    //   .attr("transform", "translate(30,0)")
-    //   .style("stroke-dasharray", "5,5")
-    //   .call(
-    //     d3
-    //       .axisLeft(yScale)
-    //       .ticks(4)
-    //       .tickSize(-width + 50)
-    //       .tickFormat("")
-    //   );
-
-    // gridVertical
-    //   .selectAll("line, path")
-    //   .attr("stroke", "#8097B1")
-    //   .attr("opacity", 0.4);
-
     var lineWithDefinedTrue = d3
       .line()
       .curve(d3.curveLinear)
       .x((d) => xScale(parse(d.date)))
       .y((d) => yScale(d.value));
+
+    var lineWithDefinedFalse = d3
+      .line()
+      .curve(d3.curveLinear)
+      .x((d) => xScale(parse(d.date)))
+      .y((d) => yScale(d.value))
+      .defined((d, i) => {
+        return d.verified === true;
+      });
 
     var areaWithDefinedTrue = d3
       .area()
@@ -232,7 +213,6 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .y1((d) => yScale(d.value));
 
     var valuePaths = d3.select("#linechart g.lines").selectAll(".lineElements");
-
     valuePaths.data(ChartData[dataGroup][0][dataBranch]).join(
       (enter) =>
         enter
@@ -254,6 +234,33 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
         update
           .attr("stroke", (d, i) => colors(i))
           .attr("d", (d) => lineWithDefinedTrue(d.values))
+          .call((update) => update.transition(t)),
+      (exit) => exit.call((exit) => exit.transition(t)).remove()
+    );
+
+    var valuePathDashed = d3
+      .select("#linechart g.lines")
+      .selectAll(".lineElementsDashed");
+    valuePathDashed.data(ChartData[dataGroup][0][dataBranch]).join(
+      (enter) =>
+        enter
+          .append("path")
+          .attr("class", "lineElementsDashed")
+          .attr("fill", "none")
+          .attr("d", (d) => {
+            lineWithDefinedFalse(d.values);
+          })
+          .attr("opacity", (d) => {
+            return d.hidden === true ? 0.1 : 1;
+          })
+          .style("clip-path", "url(#clip)") //<-- apply clipping
+          .attr("stroke", (d, i) => colors(i))
+          .attr("stroke-width", "2px")
+          .call((enter) => enter.transition(t)),
+      (update) =>
+        update
+          .attr("stroke", (d, i) => colors(i))
+          .attr("d", (d) => lineWithDefinedFalse(d.values))
           .call((update) => update.transition(t)),
       (exit) => exit.call((exit) => exit.transition(t)).remove()
     );
@@ -326,14 +333,12 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
             div.transition().duration(50).style("opacity", 1);
 
             let tipValue =
-              "<strong>Name</strong>: " +
+              "<strong>Provider name:</strong><br/>" +
               d.name +
-              "<br /><strong>Value</strong>: " +
-              d.value +
-              "<br/> Date: " +
+              "<br /><strong>Value provided:</strong> <br />" +
+              formatter.format(d.value) +
+              "<br/><br/> <em>" +
               d.date +
-              "<br /> Validated: <em>" +
-              d.verified +
               "</em>";
 
             div
@@ -359,7 +364,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
 
     const xScale2 = d3
       .scaleTime()
-      .range([30, width - margin.left])
+      .range([margin.left, width])
       .domain(d3.extent(Xdomain));
 
     const yScale2 = d3
@@ -391,8 +396,8 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     var brush = d3
       .brushX()
       .extent([
-        [30, 0],
-        [width - 20, height2],
+        [margin.left, 0],
+        [width, height2],
       ])
       .on("brush end", brushed.bind(this));
 
@@ -403,18 +408,18 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .append("clipPath")
       .attr("id", "clip")
       .append("rect")
-      .attr("width", width - 40)
+      .attr("width", width + 20)
       .attr("height", height)
-      .attr("transform", "translate(30,0)");
+      .attr("transform", "translate(" + (margin.left - 10) + ",0)");
 
     d3.select("#linechart")
       .append("defs")
       .append("clipPath")
       .attr("id", "clipForPoints")
       .append("rect")
-      .attr("width", width + 10)
+      .attr("width", width + 20)
       .attr("height", height)
-      .attr("transform", "translate(15,0)");
+      .attr("transform", "translate( " + (margin.left - 10) + ",0)");
 
     d3.select("#linechart .brush").remove(); // clears brush scrolling element
 
@@ -424,8 +429,8 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .attr("width", 100)
       .call(brush)
       .call(brush.move, [
-        (xScale2.range()[1] / 100) * 25,
-        (xScale2.range()[1] / 100) * 75,
+        (xScale2.range()[1] / 100) * 0 + margin.left,
+        (xScale2.range()[1] / 100) * 100,
       ]);
 
     function brushed() {
@@ -472,7 +477,9 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       d3.select("#linechart g.lines")
         .selectAll(".lineElements")
         .attr("d", (d) => lineWithDefinedTrue(d.values));
-      // d3.select("#linechart g.lines").selectAll(".lineElementsDashed").attr("d", d => lineWithDefinedFalse(d.values))
+      d3.select("#linechart g.lines")
+        .selectAll(".lineElementsDashed")
+        .attr("d", (d) => lineWithDefinedFalse(d.values));
 
       yAxis.call(d3.axisLeft(yScale).tickSize(-width + 50));
       xAxis.call(

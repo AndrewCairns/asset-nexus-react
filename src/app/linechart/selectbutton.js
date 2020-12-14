@@ -60,7 +60,6 @@ function SelectButton({ ChartData, dataSelection, passTextUp, colorRange }) {
         onClick={(el) => selectItem(el)}
         style={{ borderLeft: "4px solid " + colorRange[i] }}
       >
-        {console.log(colorRange[i])}
         <span>{el.key}</span>
         <span className="currentValue">
           £{el.values[el.values.length - 1].value}k

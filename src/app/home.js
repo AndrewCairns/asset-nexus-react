@@ -11,7 +11,7 @@ const ChartData = {
     {
       Property: [
         {
-          key: "Zoopla Value",
+          key: "Zoopla",
           values: [
             {
               value: 150000,
