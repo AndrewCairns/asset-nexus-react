@@ -104,3 +104,45 @@ select:focus {
     calc(100% - 20px) calc(1em + 10px), calc(100% - 2.5em) 0.8em;
   outline: 0;
 }
+
+.sunburst-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 50vh;
+  width: 100%;
+
+  .sunburstChart {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.metric-bubble {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  min-width: 300px;
+  min-height: 300px;
+  width: 50vw;
+  height: 50vw;
+
+  max-width: 600px;
+  max-height: 600px;
+
+  background: #a84c85;
+  color: #fff;
+  border-radius: 50%;
+
+  > * {
+    color: #fff;
+  }
+
+  > h2 {
+    font-size: 2rem;
+    padding-top: 0;
+  }
+}

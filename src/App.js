@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import Home from "./app/home";
-import GridView from "./app/grid";
+import Overview from "./app/overview/overview";
 import "./App.scss";
 
 function App() {
@@ -24,7 +24,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/home" component={Home} />
-            <Route exact path="/grid" component={GridView} />
+            <Route exact path="/overview" component={Overview} />
           </Switch>
         </div>
       </BrowserRouter>
