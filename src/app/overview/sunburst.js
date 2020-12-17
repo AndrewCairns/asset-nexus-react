@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "react-tabs/style/react-tabs.css";
 import * as d3 from "d3";
 
 function Sunburst({ ChartData, colorsArray }) {
@@ -155,7 +154,7 @@ function Sunburst({ ChartData, colorsArray }) {
         .style("font-weight", "600")
         .style("fill", (d) => {
           while (d.depth > 1) d = d.parent;
-          return getBrightness(color(d.data.name)) < 125 ? "#fff" : "#000";
+          return getBrightness(color(d.data.name)) < 125 ? "#fff" : "#4e4e4e";
         })
         .attr("fill-opacity", (d) => +labelVisible(d.current))
         .attr("transform", (d) => labelTransform(d.current))
@@ -243,11 +242,15 @@ function Sunburst({ ChartData, colorsArray }) {
       }
 
       function labelTransform(d) {
-        const x = (((d.x0 + d.x1) / 2) * 182) / Math.PI;
+        const x = (((d.x0 + d.x1) / 2) * 180) / Math.PI;
         const y = ((d.y0 + d.y1) / 2) * 170;
-        return `rotate(${x - 90}) translate(${y},0) rotate(${
-          x < 180 ? 0 : 180
-        })`;
+
+        // rotation. Some rotation logic for when there is one item
+        return `
+        rotate(${x === 180 ? x - 90 : x - 87}) translate(${
+          x === 180 ? y - 30 : y
+        },0) 
+        rotate(${x === 180 ? 270 : x < 180 ? 0 : 180})`;
       }
 
       return svg.node();

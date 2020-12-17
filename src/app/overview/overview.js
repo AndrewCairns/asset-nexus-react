@@ -1,9 +1,16 @@
 import React from "react";
 import "react-tabs/style/react-tabs.css";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
 import Sunburst from "./sunburst";
 import { Col, Grid, Row } from "react-flexbox-grid";
+
+import { IoUmbrellaOutline, IoHomeOutline } from "react-icons/io5";
+import { RiMoneyPoundCircleLine, RiMoneyPoundBoxLine } from "react-icons/ri";
+
+let colorPositive = ["#2075D3", "#4F90DC", "#7BACE5", "#BDD6F2"];
+let colorNegative = ["#931E66", "#9E3676", "#BE79A4", "#DFBBD0"];
+let colorArrayAssets = ["#52BC46", "#64C35A", "#98D791", "#CBEBC8"];
+let colorArrayDebts = colorNegative;
 
 var formatter = new Intl.NumberFormat(undefined, {
   style: "currency",
@@ -12,7 +19,15 @@ var formatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
 });
 
-const NPVDataValue = 1532000;
+const NPVDataValue = -1532000;
+
+let NPVcolor = colorPositive[0];
+
+if (NPVDataValue >= 0) {
+  NPVcolor = colorPositive[0];
+} else {
+  NPVcolor = colorNegative[0];
+}
 
 const AssetsDataset = {
   name: "Assets",
@@ -179,20 +194,46 @@ const InsuranceDataset = {
   ],
 };
 
-let colorPositive = ["#2075D3", "#4F90DC", "#7BACE5", "#BDD6F2"];
-let colorNegative = ["#931E66", "#9E3676", "#BE79A4", "#DFBBD0"];
-let colorArrayAssets = ["#52BC46", "#64C35A", "#98D791", "#CBEBC8"];
-let colorArrayDebts = colorNegative;
+// const InsuranceDatasetOption2 = {
+//   name: "Life Insurance",
+//   children: [
+//     {
+//       name: "Aviva",
+//       value: 120000,
+//       date: "23/12/2026",
+//     },
+//   ],
+// };
 
 function Overview() {
   return (
     <>
       <Tabs>
         <TabList>
-          <Tab>NPV</Tab>
-          <Tab>Assets</Tab>
-          <Tab>Debts</Tab>
-          <Tab>Insurance</Tab>
+          <Tab>
+            <div className="tab-icon">
+              <RiMoneyPoundCircleLine />
+            </div>
+            NPV
+          </Tab>
+          <Tab>
+            <div className="tab-icon">
+              <IoHomeOutline />{" "}
+            </div>
+            Assets
+          </Tab>
+          <Tab>
+            <div className="tab-icon">
+              <RiMoneyPoundBoxLine />
+            </div>
+            Debts
+          </Tab>
+          <Tab>
+            <div className="tab-icon">
+              <IoUmbrellaOutline />
+            </div>
+            Insurance
+          </Tab>
         </TabList>
 
         <TabPanel>
@@ -200,10 +241,17 @@ function Overview() {
             <Row center="xs">
               <Col xs={12} sm={12} md={8} lg={8} className="u-pt-gi">
                 <Row center="xs">
-                  <div className="metric-bubble">
+                  <div
+                    className="metric-bubble"
+                    style={{ background: NPVcolor }}
+                  >
                     <h4>Net Present Value</h4>
                     <h2> {formatter.format(NPVDataValue)}</h2>
                   </div>
+                  {/* <Sunburst
+                    ChartData={InsuranceDatasetOption2}
+                    colorsArray={colorPositive}
+                  /> */}
                 </Row>
               </Col>
             </Row>
