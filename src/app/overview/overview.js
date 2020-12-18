@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "react-tabs/style/react-tabs.css";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import Sunburst from "./sunburst";
@@ -19,15 +19,15 @@ var formatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 0,
 });
 
-const NPVDataValue = -1532000;
+const OverviewTotals = {
+  NPV: 1532000,
+  Assets: 120000,
+  Debts: 123000,
+  Insurence: 20000,
+};
 
+let NPVDataValue = OverviewTotals.NPV;
 let NPVcolor = colorPositive[0];
-
-if (NPVDataValue >= 0) {
-  NPVcolor = colorPositive[0];
-} else {
-  NPVcolor = colorNegative[0];
-}
 
 const AssetsDataset = {
   name: "Assets",
@@ -173,18 +173,8 @@ const InsuranceDataset = {
     },
     {
       name: "Zurich",
-      children: [
-        {
-          name: "Policy one",
-          value: 500000,
-          date: "03/10/2040",
-        },
-        {
-          name: "Policy two",
-          value: 80000,
-          date: "03/10/2054",
-        },
-      ],
+      value: 500000,
+      date: "03/10/2040",
     },
     {
       name: "Vitality",
@@ -194,18 +184,22 @@ const InsuranceDataset = {
   ],
 };
 
-// const InsuranceDatasetOption2 = {
-//   name: "Life Insurance",
-//   children: [
-//     {
-//       name: "Aviva",
-//       value: 120000,
-//       date: "23/12/2026",
-//     },
-//   ],
-// };
-
 function Overview() {
+  let [LifeDeathToggle, setToggle] = useState(false);
+
+  if (LifeDeathToggle === true) {
+    NPVDataValue = OverviewTotals.Assets - OverviewTotals.Debts;
+  } else {
+    NPVDataValue =
+      OverviewTotals.Assets + OverviewTotals.Insurence - OverviewTotals.Debts;
+  }
+
+  if (NPVDataValue >= 0) {
+    NPVcolor = colorPositive[0];
+  } else {
+    NPVcolor = colorNegative[0];
+  }
+
   return (
     <>
       <Tabs>
@@ -240,6 +234,20 @@ function Overview() {
           <Grid fluid>
             <Row center="xs">
               <Col xs={12} sm={12} md={8} lg={8} className="u-pt-gi">
+                <div className="tg-list">
+                  <input id="cb1" className="tgl tgl-light" type="checkbox" />
+                  Life{" "}
+                  <label
+                    className="tgl-btn"
+                    htmlFor="cb1"
+                    onClick={() =>
+                      setToggle((LifeDeathToggle = !LifeDeathToggle))
+                    }
+                  ></label>{" "}
+                  Death
+                </div>
+              </Col>
+              <Col xs={12} sm={12} md={8} lg={8}>
                 <Row center="xs">
                   <div
                     className="metric-bubble"
@@ -248,10 +256,6 @@ function Overview() {
                     <h4>Net Present Value</h4>
                     <h2> {formatter.format(NPVDataValue)}</h2>
                   </div>
-                  {/* <Sunburst
-                    ChartData={InsuranceDatasetOption2}
-                    colorsArray={colorPositive}
-                  /> */}
                 </Row>
               </Col>
             </Row>
