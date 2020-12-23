@@ -27,7 +27,7 @@ const OverviewTotals = {
 };
 
 let NPVDataValue = OverviewTotals.NPV;
-let NPVcolor = colorPositive[0];
+let NPVcolor = colorArrayAssets[0];
 
 const AssetsDataset = {
   name: "Assets",
@@ -195,7 +195,7 @@ function Overview() {
   }
 
   if (NPVDataValue >= 0) {
-    NPVcolor = colorPositive[0];
+    NPVcolor = colorArrayAssets[1];
   } else {
     NPVcolor = colorNegative[0];
   }
