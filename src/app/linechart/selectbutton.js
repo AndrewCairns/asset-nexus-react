@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
-let dataGroup = "Assets";
-let dataBranch = "Property";
+let dataBranch = "All";
 
 function SelectButton({ ChartData, dataSelection, passTextUp, colorRange }) {
   let buttonItems = [];
@@ -9,15 +8,12 @@ function SelectButton({ ChartData, dataSelection, passTextUp, colorRange }) {
   const [selectedItemState, setSelected] = useState({});
 
   if (dataSelection.length > 0) {
-    let displayPath = dataSelection.split("/");
-    dataGroup = displayPath[0];
-    dataBranch = displayPath[1];
+    dataBranch = dataSelection;
   } else {
-    dataGroup = "Assets";
-    dataBranch = "Property";
+    dataBranch = "All";
   }
 
-  ChartData[dataGroup][0][dataBranch].map((displayGroupItems) => {
+  ChartData[0][dataBranch].map((displayGroupItems) => {
     return buttonItems.push(displayGroupItems);
   });
 
@@ -30,7 +26,7 @@ function SelectButton({ ChartData, dataSelection, passTextUp, colorRange }) {
       [el.target.name]: selected[el.target.name],
     }));
 
-    ChartData[dataGroup][0][dataBranch].map((displayGroupItems) => {
+    ChartData[0][dataBranch].map((displayGroupItems) => {
       if (
         displayGroupItems.key === el.target.name &&
         selected[el.target.name] === true

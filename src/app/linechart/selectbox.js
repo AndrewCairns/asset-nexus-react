@@ -13,21 +13,14 @@ function SelectBox({ ChartData, passChildData }) {
         <option disabled value="DEFAULT">
           Please select an item
         </option>
-        {Object.keys(items).map((item, i) => {
+        {Object.keys(items[0]).map((item2, j) => {
           return (
-            <optgroup key={i} label={item}>
-              {items[item].map((item2) => {
-                return Object.keys(item2).map((item3, j) => {
-                  return (
-                    <option key={j} value={item + "/" + item3}>
-                      {item3}
-                    </option>
-                  );
-                });
-              })}
-            </optgroup>
+            <option key={j} value={item2}>
+              {item2}
+            </option>
           );
         })}
+        ;
       </select>
     </>
   );

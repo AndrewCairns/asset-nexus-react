@@ -34,8 +34,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     });
 
     // Data
-    let dataGroup = "Assets";
-    let dataBranch = "Property";
+    let dataBranch = "All";
 
     const margin2 = {
       top: height + margin.top + margin.bottom,
@@ -53,16 +52,13 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .y1((d) => yScale2(d.value));
 
     if (dataSelection.length > 0) {
-      let displayPath = dataSelection.split("/");
-      dataGroup = displayPath[0];
-      dataBranch = displayPath[1];
+      dataBranch = dataSelection;
     } else {
-      dataGroup = "Assets";
-      dataBranch = "Property";
+      dataBranch = "All";
     }
 
     // Domain scale function - TODO
-    ChartData[dataGroup][0][dataBranch].map((displayGroupItems, i) => {
+    ChartData[0][dataBranch].map((displayGroupItems, i) => {
       displayGroupItems.color = colors(i);
       return displayGroupItems.values.forEach((displayGroupItemValues) => {
         Ydomain.push(displayGroupItemValues.value);
@@ -113,9 +109,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .attr("class", "xaxis2 axis")
       .attr("transform", "translate(0," + (margin2.top + height2) + ")");
 
-    xAxis2.call(
-      d3.axisBottom(xScale).ticks(d3.timeMonth).tickFormat(d3.timeFormat("%b"))
-    );
+    xAxis2.call(d3.axisBottom(xScale).ticks(0));
 
     // AXIS Labels
     svg
@@ -213,7 +207,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .y1((d) => yScale(d.value));
 
     var valuePaths = d3.select("#linechart g.lines").selectAll(".lineElements");
-    valuePaths.data(ChartData[dataGroup][0][dataBranch]).join(
+    valuePaths.data(ChartData[0][dataBranch]).join(
       (enter) =>
         enter
           .append("path")
@@ -241,7 +235,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
     var valuePathDashed = d3
       .select("#linechart g.lines")
       .selectAll(".lineElementsDashed");
-    valuePathDashed.data(ChartData[dataGroup][0][dataBranch]).join(
+    valuePathDashed.data(ChartData[0][dataBranch]).join(
       (enter) =>
         enter
           .append("path")
@@ -372,7 +366,7 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       .range([height2 - 20, 20])
       .domain(d3.extent(Ydomain));
 
-    context.data(ChartData[dataGroup][0][dataBranch]).join(
+    context.data(ChartData[0][dataBranch]).join(
       (enter) =>
         enter
           .append("path")
@@ -485,9 +479,8 @@ function LineChart({ ChartData, dataSelection, colorRange }) {
       xAxis.call(
         d3
           .axisBottom(xScale)
-          .ticks(d3.timeMonth)
+          .ticks(12)
           .tickSize(-height + 20)
-          .tickFormat(d3.timeFormat("%b"))
       );
     }
   });
