@@ -12,11 +12,7 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
     const width = 1124 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
     const parse = d3.timeParse("%d/%m/%Y");
-    // colorsArray = ["#7400b8", "#5e60ce", "#48bfe3", "#64dfdf", "#80ffdb"]
-    // colorsArray = ["red", "green", "blue"]
     const colorsArray = colorRange;
-    // colorsOrg = d3.scaleOrdinal(d3.schemeCategory10);
-    // colorsFull = d3.scaleOrdinal(["#7400b8","#6930c3","#5e60ce","#5390d9","#4ea8de","#48bfe3","#56cfe1","#64dfdf","#72efdd","#80ffdb"]);
     const colors = d3.scaleOrdinal(colorsArray);
 
     const Ydomain = [];
@@ -27,10 +23,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
     var formatter = new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: "GBP",
-
-      // These options are needed to round to whole numbers if that's what you want.
-      //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-      //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
     });
 
     // Data
@@ -100,16 +92,34 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
       .domain([yScaleDivergingNegative, yScaleDivergingPositive])
       .nice();
 
-    const xAxis = svg
+    const xAxisLine = svg
       .append("g")
-      .attr("class", "xaxis axis")
-      .attr("transform", "translate(0," + (height / 2 + 10) + ")")
+      .attr("class", "xaxisLine axis")
+      .attr("transform", "translate(0,0)");
+
+    xAxisLine
+      .append("line")
+      .style("stroke", "#8097B1")
+      .attr("fill", "none")
+      .style("stroke-width", 1.5)
+      .attr("opacity", 0.5)
+      .attr("x1", margin.left)
+      .attr("y1", height / 2 + 10)
+      .attr("x2", width - margin.left)
+      .attr("y2", height / 2 + 10);
+
+    //Grid and ticks
+    const xAxisGrid = svg
+      .append("g")
+      .attr("class", "xaxisGrid axis")
+      .attr("transform", "translate(0," + height + ")")
       .style("stroke-dasharray", "5,5")
       .style("stroke", "#8097B1");
 
-    const yAxis = svg
+    //Grid and ticks
+    const yAxisGrid = svg
       .append("g")
-      .attr("class", "yaxis axis")
+      .attr("class", "yaxisGrid axis")
       .attr("transform", "translate(" + margin.left + ",0)")
       .style("stroke-dasharray", "5,5")
       .style("stroke", "#8097B1");
@@ -194,81 +204,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
 
     d3.select("#linechart g.lines").selectAll(".grid").remove(); // clears grid when updating data ??
 
-    var lineWithDefinedTrue = d3
-      .line()
-      .curve(d3.curveLinear)
-      .x((d) => xScale(parse(d.date)))
-      .y((d) => yScale(d.value));
-
-    var lineWithDefinedFalse = d3
-      .line()
-      .curve(d3.curveLinear)
-      .x((d) => xScale(parse(d.date)))
-      .y((d) => yScale(d.value))
-      .defined((d, i) => {
-        return d.verified === true;
-      });
-
-    var areaWithDefinedTrue = d3
-      .area()
-      .curve(d3.curveLinear)
-      .x((d) => xScale(parse(d.date)))
-      .y0(height)
-      .y1((d) => yScale(d.value));
-
-    var valuePaths = d3.select("#linechart g.lines").selectAll(".lineElements");
-    valuePaths.data(ChartData[0][dataBranch]).join(
-      (enter) =>
-        enter
-          .append("path")
-          .attr("class", "lineElements")
-          .attr("fill", "none")
-          .attr("d", (d) => {
-            lineWithDefinedTrue(d.values);
-          })
-          .attr("opacity", (d) => {
-            return d.hidden === true ? 0.1 : 1;
-          })
-          .style("clip-path", "url(#clip)") //<-- apply clipping
-          .attr("stroke", (d, i) => colors(i))
-          .attr("stroke-width", "2px")
-          .style("stroke-dasharray", "5,5")
-          .call((enter) => enter.transition(t)),
-      (update) =>
-        update
-          .attr("stroke", (d, i) => colors(i))
-          .attr("d", (d) => lineWithDefinedTrue(d.values))
-          .call((update) => update.transition(t)),
-      (exit) => exit.call((exit) => exit.transition(t)).remove()
-    );
-
-    var valuePathDashed = d3
-      .select("#linechart g.lines")
-      .selectAll(".lineElementsDashed");
-    valuePathDashed.data(ChartData[0][dataBranch]).join(
-      (enter) =>
-        enter
-          .append("path")
-          .attr("class", "lineElementsDashed")
-          .attr("fill", "none")
-          .attr("d", (d) => {
-            lineWithDefinedFalse(d.values);
-          })
-          .attr("opacity", (d) => {
-            return d.hidden === true ? 0.1 : 1;
-          })
-          .style("clip-path", "url(#clip)") //<-- apply clipping
-          .attr("stroke", (d, i) => colors(i))
-          .attr("stroke-width", "2px")
-          .call((enter) => enter.transition(t)),
-      (update) =>
-        update
-          .attr("stroke", (d, i) => colors(i))
-          .attr("d", (d) => lineWithDefinedFalse(d.values))
-          .call((update) => update.transition(t)),
-      (exit) => exit.call((exit) => exit.transition(t)).remove()
-    );
-
     var valuePointLines = d3
       .select("#linechart g.lines")
       .selectAll(".valuePointLines");
@@ -280,10 +215,9 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
           .attr("class", "valuePointLines")
           .style("clip-path", "url(#clip)") //<-- apply clipping
           .attr("fill", "none")
-          .style("opacity", (d) => {
-            return d.verified === false || d.hidden === true ? 0 : 1;
-          })
-          .attr("stroke", (d, i) => d.color)
+          .style("stroke", (d, i) => {
+            return d.value >= 0 ? "#2075d3" : "#a84c85";
+          }) // set the line colour
           .style("stroke-width", 2.5)
           .attr("x1", (d) => {
             return xScale(parse(d.date));
@@ -315,18 +249,15 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
           .attr("class", "points")
           .style("clip-path", "url(#clipForPoints)") //<-- apply clipping
           .style("fill", (d, i) => {
-            return d.verified === true ? d.color : "#fff8ee";
-          })
+            return d.value >= 0 ? "#2075d3" : "#a84c85";
+          }) // set the line colour
           .style("opacity", (d) => {
             return d.hidden === true ? 0.1 : 1;
           })
-          .style("stroke", (d, i) => d.color) // set the line colour
-          .style("stroke-width", (d, i) => {
-            return d.verified === true ? 3.5 : 4.5;
-          })
-          .style("r", (d, i) => {
-            return d.verified === true ? 4 : 6;
-          })
+          .style("stroke", (d, i) => {
+            return d.value >= 0 ? "#2075d3" : "#a84c85";
+          }) // set the line colour
+          .style("r", 6)
           .attr("cx", (d) => {
             return xScale(parse(d.date));
           })
@@ -450,17 +381,7 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
         .attr("cy", (d) => {
           return yScale(d.value);
         })
-        .style("fill", (d, i) => {
-          return d.verified === false ? d.color : "#fff8ee";
-        })
-        .attr("opacity", "1")
-        .style("stroke", (d, i) => d.color) // set the line colour
-        .style("stroke-width", (d, i) => {
-          return d.verified === false ? 8.5 : 5.5;
-        })
-        .style("r", (d, i) => {
-          return d.verified === false ? 4 : 10;
-        });
+        .style("r", 10);
 
       d3.select("#linechart g.lines")
         .selectAll(".valuePointLines")
@@ -473,20 +394,17 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
         .attr("x2", (d) => {
           return xScale(parse(d.date));
         })
-        .attr("y2", height / 2);
+        .attr("y2", height / 2 + 10);
 
-      d3.select("#linechart g.lines")
-        .selectAll(".AreaElements")
-        .attr("d", (d) => areaWithDefinedTrue(d.values));
-      d3.select("#linechart g.lines")
-        .selectAll(".lineElements")
-        .attr("d", (d) => lineWithDefinedTrue(d.values));
-      d3.select("#linechart g.lines")
-        .selectAll(".lineElementsDashed")
-        .attr("d", (d) => lineWithDefinedFalse(d.values));
-
-      yAxis.call(d3.axisLeft(yScale).tickSize(-width + 50));
-      xAxis.call(
+      xAxisLine.call(
+        d3
+          .axisBottom(xScale)
+          .ticks(12)
+          .tickSize(height / 2 + 20)
+          .tickFormat(d3.timeFormat("%d/%m/%Y"))
+      );
+      yAxisGrid.call(d3.axisLeft(yScale).tickSize(-width + 50));
+      xAxisGrid.call(
         d3
           .axisBottom(xScale)
           .ticks(12)
