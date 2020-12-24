@@ -12,12 +12,9 @@ function LineChartNPV({ ChartData, colorRange }) {
     const width = 1124 - margin.left - margin.right;
     const height = 500 - margin.top - margin.bottom;
     const parse = d3.timeParse("%d/%m/%Y");
-    const colorsArray = colorRange;
-    const colors = d3.scaleOrdinal(colorsArray);
 
     const Ydomain = [];
     const Xdomain = [];
-    const representedValues = [];
     const t = d3.transition().duration(750).ease(d3.easeLinear);
 
     var formatter = new Intl.NumberFormat(undefined, {
@@ -120,10 +117,9 @@ function LineChartNPV({ ChartData, colorRange }) {
 
     const contextlineGroups = svg
       .append("g")
-      .attr("class", "context contextNPV")
       .attr("transform", "translate(" + 0 + "," + margin2.top + ")");
 
-    var context = contextlineGroups.selectAll("g");
+    contextlineGroups.attr("class", "context contextNPV");
 
     const chartLegend = d3.select("#linechart g.lines").append("g");
 
@@ -256,11 +252,6 @@ function LineChartNPV({ ChartData, colorRange }) {
       .scaleTime()
       .range([margin.left, width])
       .domain(d3.extent(Xdomain));
-
-    const yScale2 = d3
-      .scaleLinear()
-      .range([height2 - 20, 20])
-      .domain(d3.extent(Ydomain));
 
     var brush = d3
       .brushX()
