@@ -21,9 +21,12 @@ function SelectButton({ ChartData, dataSelection, passTextUp, colorRange }) {
     var selected = selectedItemState;
     selected[el.target.name] = !selected[el.target.name];
 
+    let selectedObjectName = [el.target.name];
+    let selectedObjectBoolean = selected[el.target.name];
+
     setSelected((prevState) => ({
       ...prevState,
-      [el.target.name]: selected[el.target.name],
+      selectedObjectName: selectedObjectBoolean,
     }));
 
     ChartData[0][dataBranch].map((displayGroupItems) => {
