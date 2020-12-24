@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-function LineChartNPV({ ChartData, dataSelection, colorRange }) {
+function LineChartNPV({ ChartData, colorRange }) {
   const d3Container = useRef(null);
 
   useEffect(() => {
@@ -25,9 +25,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
       currency: "GBP",
     });
 
-    // Data
-    let dataBranch = "All";
-
     const margin2 = {
       top: height + margin.top + margin.bottom,
       right: 150,
@@ -36,31 +33,8 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
     };
     const height2 = 100;
 
-    const area = d3
-      .area()
-      .curve(d3.curveLinear)
-      .x((d) => xScale2(parse(d.date)))
-      .y0(height2)
-      .y1((d) => yScale2(d.value));
-
-    if (dataSelection.length > 0) {
-      dataBranch = dataSelection;
-    } else {
-      dataBranch = "All";
-    }
-
-    // Domain scale function - TODO
-    ChartData[0][dataBranch].map((displayGroupItems, i) => {
-      displayGroupItems.color = colors(i);
-      return displayGroupItems.values.forEach((displayGroupItemValues) => {
-        Ydomain.push(displayGroupItemValues.value);
-        Xdomain.push(parse(displayGroupItemValues.date));
-        displayGroupItemValues.color = colors(i);
-        displayGroupItemValues.hidden = displayGroupItems.hidden;
-        displayGroupItemValues.name = displayGroupItems.key;
-        return representedValues.push(displayGroupItemValues);
-      });
-    });
+    Ydomain.push(ChartData[0].NPV[0].value);
+    Xdomain.push(parse(ChartData[0].NPV[0].date));
 
     const svg = d3
       .select("#linechart")
@@ -109,14 +83,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
       .attr("y2", height / 2 + 10);
 
     //Grid and ticks
-    const xAxisGrid = svg
-      .append("g")
-      .attr("class", "xaxisGrid axis")
-      .attr("transform", "translate(0," + height + ")")
-      .style("stroke-dasharray", "5,5")
-      .style("stroke", "#8097B1");
-
-    //Grid and ticks
     const yAxisGrid = svg
       .append("g")
       .attr("class", "yaxisGrid axis")
@@ -132,15 +98,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
     xAxis2.call(d3.axisBottom(xScale).ticks(0));
 
     // AXIS Labels
-    svg
-      .append("text")
-      .attr("class", "x label")
-      .attr("text-anchor", "end")
-      .attr("x", width - 30)
-      .attr("y", height2 + margin2.top + 45)
-      .style("fill", "#8097B1")
-      .text("Full Date Range (year)");
-
     svg
       .append("text")
       .attr("class", "x label")
@@ -163,7 +120,7 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
 
     const contextlineGroups = svg
       .append("g")
-      .attr("class", "context")
+      .attr("class", "context contextNPV")
       .attr("transform", "translate(" + 0 + "," + margin2.top + ")");
 
     var context = contextlineGroups.selectAll("g");
@@ -208,7 +165,7 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
       .select("#linechart g.lines")
       .selectAll(".valuePointLines");
 
-    valuePointLines.data(representedValues).join(
+    valuePointLines.data(ChartData[0].NPV).join(
       (enter) =>
         enter
           .append("line")
@@ -242,7 +199,7 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
 
     var valuePoints = d3.select("#linechart g.lines").selectAll(".points");
 
-    valuePoints.data(representedValues).join(
+    valuePoints.data(ChartData[0].NPV).join(
       (enter) =>
         enter
           .append("circle")
@@ -268,9 +225,7 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
             div.transition().duration(50).style("opacity", 1);
 
             let tipValue =
-              "<strong>Provider name:</strong><br/>" +
-              d.name +
-              "<br /><strong>Value provided:</strong> <br />" +
+              "<strong> Net Present Value </strong><br/>" +
               formatter.format(d.value) +
               "<br/><br/> <em>" +
               d.date +
@@ -306,27 +261,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
       .scaleLinear()
       .range([height2 - 20, 20])
       .domain(d3.extent(Ydomain));
-
-    context.data(ChartData[0][dataBranch]).join(
-      (enter) =>
-        enter
-          .append("path")
-          .attr("class", "lineElementsContext")
-          .attr("fill", () => {
-            var mid = colorsArray.length / 2;
-            return colorsArray[Math.round(mid) - 1];
-          })
-          .attr("opacity", "0.2")
-          .attr("d", (d) => area(d.values))
-          .call((enter) => enter.transition(t)),
-      (update) =>
-        update
-          .attr("opacity", "0.2")
-          .call((update) =>
-            update.transition(t).attr("d", (d) => area(d.values))
-          ),
-      (exit) => exit.call((exit) => exit.transition(t)).remove()
-    );
 
     var brush = d3
       .brushX()
@@ -404,12 +338,6 @@ function LineChartNPV({ ChartData, dataSelection, colorRange }) {
           .tickFormat(d3.timeFormat("%d/%m/%Y"))
       );
       yAxisGrid.call(d3.axisLeft(yScale).tickSize(-width + 50));
-      xAxisGrid.call(
-        d3
-          .axisBottom(xScale)
-          .ticks(12)
-          .tickSize(-height + 20)
-      );
     }
   });
 

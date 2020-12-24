@@ -286,29 +286,45 @@ const InsuranceDataset = [
 
 const NPVDataset = [
   {
-    All: [
+    key: "NPV",
+    values: [
       {
-        key: "NPV",
-        values: [
-          {
-            value: -500000,
-            date: "02/03/2020",
-            verified: true,
-          },
-        ],
+        value: -500000,
+        date: "02/03/2020",
       },
     ],
   },
 ];
 
-const OverviewTotals = {
+const OverviewTotalsOriginal = {
   NPV: 1532000,
   Assets: 120000,
   Debts: 123000,
   Insurence: 20000,
 };
 
-let NPVDataValue = OverviewTotals.NPV;
+const OverviewTotals = [
+  {
+    NPV: [
+      {
+        value: 1532000,
+        date: "02/03/2020",
+      },
+    ],
+    Assets: {
+      value: 120000,
+      date: "02/03/2020",
+    },
+    Debts: {
+      value: 123000,
+      date: "02/03/2020",
+    },
+    Insurence: {
+      value: 20000,
+      date: "02/03/2020",
+    },
+  },
+];
 
 function Home() {
   const [dataSelection, setChildData] = useState("");
@@ -316,11 +332,16 @@ function Home() {
   let [LifeDeathToggle, setToggle] = useState(false);
 
   if (LifeDeathToggle === true) {
-    NPVDataValue = OverviewTotals.Assets - OverviewTotals.Debts;
+    OverviewTotals[0].NPV[0].value =
+      OverviewTotals[0].Assets.value - OverviewTotals[0].Debts.value;
   } else {
-    NPVDataValue =
-      OverviewTotals.Assets + OverviewTotals.Insurence - OverviewTotals.Debts;
+    OverviewTotals[0].NPV[0].value =
+      OverviewTotals[0].Assets.value +
+      OverviewTotals[0].Insurence.value -
+      OverviewTotals[0].Debts.value;
   }
+
+  console.log(OverviewTotals[0].NPV[0].value);
 
   return (
     <>
@@ -356,15 +377,25 @@ function Home() {
           <Grid fluid>
             <Row center="xs">
               <Col xs={12} sm={12} md={12} lg={12} className="u-pt-gi">
+                <div className="tg-list">
+                  <input id="cb1" className="tgl tgl-light" type="checkbox" />
+                  Life{" "}
+                  <label
+                    className="tgl-btn"
+                    htmlFor="cb1"
+                    onClick={() =>
+                      setToggle((LifeDeathToggle = !LifeDeathToggle))
+                    }
+                  ></label>{" "}
+                  Death
+                </div>
+
                 <LineChartNPV
-                  ChartData={NPVDataset}
+                  ChartData={OverviewTotals}
                   dataSelection={dataSelection}
                   dataHidden={TextTest}
                   colorRange={colorRange}
                 />
-              </Col>
-              <Col xs={12} sm={12} md={8} lg={8}>
-                <Row center="xs">hi {NPVDataValue}</Row>
               </Col>
             </Row>
           </Grid>
