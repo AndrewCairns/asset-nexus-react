@@ -284,25 +284,6 @@ const InsuranceDataset = [
   },
 ];
 
-const NPVDataset = [
-  {
-    key: "NPV",
-    values: [
-      {
-        value: -500000,
-        date: "02/03/2020",
-      },
-    ],
-  },
-];
-
-const OverviewTotalsOriginal = {
-  NPV: 1532000,
-  Assets: 120000,
-  Debts: 123000,
-  Insurence: 20000,
-};
-
 const OverviewTotals = [
   {
     NPV: [
@@ -341,31 +322,29 @@ function Home() {
       OverviewTotals[0].Debts.value;
   }
 
-  console.log(OverviewTotals[0].NPV[0].value);
-
   return (
     <>
       <Tabs>
         <TabList>
-          <Tab>
+          <Tab onClick={() => setChildData("All")}>
             <div className="tab-icon">
               <RiMoneyPoundCircleLine />
             </div>
             NPV
           </Tab>
-          <Tab>
+          <Tab onClick={() => setChildData("All")}>
             <div className="tab-icon">
               <IoHomeOutline />{" "}
             </div>
             Assets
           </Tab>
-          <Tab>
+          <Tab onClick={() => setChildData("All")}>
             <div className="tab-icon">
               <RiMoneyPoundBoxLine />
             </div>
             Debts
           </Tab>
-          <Tab>
+          <Tab onClick={() => setChildData("All")}>
             <div className="tab-icon">
               <IoUmbrellaOutline />
             </div>
@@ -405,10 +384,10 @@ function Home() {
             <Row center="xs">
               <Col xs={12} sm={12} md={12} lg={12} className="u-pt-gi">
                 <Row center="xs">
-                  <Grid fluid>
+                  <Grid>
                     <Row>
                       <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
-                        <Row start="lg" center="xs">
+                        <Row start="md" center="xs">
                           <SelectBox
                             ChartData={AssetsDataset}
                             passChildData={setChildData}
@@ -416,7 +395,7 @@ function Home() {
                         </Row>
                       </Col>
                       <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
-                        <Row center="xs" end="lg">
+                        <Row end="md" center="xs">
                           <SelectButton
                             ChartData={AssetsDataset}
                             dataSelection={dataSelection}
@@ -447,11 +426,10 @@ function Home() {
             <Row center="xs">
               <Col xs={12} sm={12} md={12} lg={12} className="u-pt-gi">
                 <Row center="xs">
-                  {" "}
-                  <Grid fluid>
+                  <Grid>
                     <Row>
                       <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
-                        <Row start="lg" center="xs">
+                        <Row start="md" center="xs">
                           <SelectBox
                             ChartData={DebtDataset}
                             passChildData={setChildData}
@@ -459,7 +437,7 @@ function Home() {
                         </Row>
                       </Col>
                       <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
-                        <Row center="xs" end="lg">
+                        <Row end="md" center="xs">
                           <SelectButton
                             ChartData={DebtDataset}
                             dataSelection={dataSelection}
@@ -490,11 +468,10 @@ function Home() {
             <Row center="xs">
               <Col xs={12} sm={12} md={12} lg={12} className="u-pt-gi">
                 <Row center="xs">
-                  {" "}
-                  <Grid fluid>
+                  <Grid>
                     <Row>
                       <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
-                        <Row start="lg" center="xs">
+                        <Row start="md" center="xs">
                           <SelectBox
                             ChartData={InsuranceDataset}
                             passChildData={setChildData}
@@ -502,7 +479,7 @@ function Home() {
                         </Row>
                       </Col>
                       <Col xs={12} sm={12} md={6} lg={6} className="u-pt-gi">
-                        <Row center="xs" end="lg">
+                        <Row end="md" center="xs">
                           <SelectButton
                             ChartData={InsuranceDataset}
                             dataSelection={dataSelection}
